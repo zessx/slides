@@ -8,7 +8,8 @@
 
 ## Du module au natif
 
-Plusieurs fonctionnalités désormais intégrées dans le coeur :
+Plusieurs fonctionnalités désormais  
+intégrées dans le coeur :
 - i18n
 - Types de champs
 - Views
@@ -19,17 +20,21 @@ Plusieurs fonctionnalités désormais intégrées dans le coeur :
 
 ## Des fonctionnalités améliorées
 
-Plus besoin de dupliquer les blocs, ils sont à présent instantiables.
+Plus besoin de dupliquer les blocs,  
+ils sont à présent instantiables.
 
-Le système de cache a entièrement été revu et est beaucou plus (trop ?) performant.
+Le système de cache a entièrement été revu  
+et est beaucou plus (trop ?) performant.
 
-La gestion du multisites a été revue pour simplifier le travail des développeurs.
+La gestion du multisites a été revue  
+pour simplifier le travail des développeurs.
 
 --- 
 
 ## Un back-office plus user-friendly
 
-Quelques améliorations du back-office pour faciliter l'administration :
+Quelques améliorations du back-office  
+pour faciliter l'administration :
 - CKeditor 4
 - Les onglets dans une colonne à droite
 - Prévisualisation du contenu
@@ -40,12 +45,16 @@ Quelques améliorations du back-office pour faciliter l'administration :
 
 ## Du tout neuf !
 
-Tout fichier de configuration peut désormais être exporté et/ou importé.  
-Les mises en production sont ainsi grandement facilitées.
+Tout fichier de configuration peut désormais  
+être exporté et/ou importé.  
+Les mises en production sont ainsi  
+grandement facilitées.
 
 Drupal passe à Twig pour tous ses templates.
 
-Composer devient le gestionnaire de dépendances, afin d'améliorer leur gestion et de suivre l'harmonisation impulsée dans la communauté PHP.
+Composer devient le gestionnaire de dépendances,  
+afin d'améliorer leur gestion et de suivre  
+l'harmonisation impulsée dans la communauté PHP.
 
 ---
 
@@ -54,8 +63,8 @@ Composer devient le gestionnaire de dépendances, afin d'améliorer leur gestion
 Pour plus de clareté, de robustesse et d'évolutivité, Drupal utilise enfin la POO :
 - Basé sur les composants Symfony2
 - Abandon de bon nombre de fonctions de thème
-- Les développement additionnels doivent être empaquetés dans un module
-- La surcharge des classes devient possible à tout niveau
+- Le code doit être empaqueté dans un module
+- La surcharge devient possible à tout niveau
 - Respect des recommandations PSR
 
 ---
@@ -70,14 +79,13 @@ Quelques exemples de modules en retard :
 - Drupal Commerce (2.0-beta en Décembre 2016)
 - Webform (5.0-beta en Janvier 2017)
 
-On trouve beaucoup de versions beta, mais qui sont plutôt stables.
-
 ---
 
 ### La base de données
 
-Elle est assez proche de ce qu'on avait déjà dans Drupal 7.  
-En revanche, la table `node` a été scindée en deux pour l'i18n :
+Très proche de ce qu'on avait déjà dans Drupal 7.  
+
+La table `node` a été scindée en deux pour l'i18n :
 
 ![La base de données](assets/images/bdd-node.png)
 
@@ -105,24 +113,26 @@ Chaque module aura son dossier `src/`, qui sera automatiquement chargé via un a
 - `config/install` : la procédure d'installation
 - `src/` : les classes
 - `translations/` : les traductions disponibles
-- `*.info` : définition du module (nom, dépendances...)
+- `*.info` : définition du module
 - `*.links.task` : définition des menus
-- `*.module` : contient des hooks (`hook_uninstall`...)
+- `*.module` : contient des hooks
 - `*.permissions` : définition des droits disponibles
-- `*.routing` : définition des routes (vers des contrôleurs, des formulaires...)
-- `*.services` : définition des services publics (extensions Twig...)
+- `*.routing` : définition des routes 
+- `*.services` : définition des services publics 
 
 +++
 
 ### Les différents tpes de routes
 
-Le type `Controller` permet d'appeler un contrôleur, qui chargera généralement un template.
+`Controller` pour appeler un contrôleur,  
+qui chargera généralement un template.
 
-Le type `Form` permet d'afficher un formulaire, et de gérer sa validation et sa soumission.
+`Form` pour afficher un formulaire,  
+et de gérer sa validation et sa soumission.
 
-Le type `EntityView` permet d'afficher le détail d'une entité.  
-Le type `EntityView` permet d'afficher une liste d'entitée.  
-Le type `EntityView` permet d'afficher le formulaire d'éditioni d'une entité.
+`EntityView` pour afficher le détail d'une entité.  
+`EntityView` pour afficher une liste d'entitée.  
+`EntityView` pour afficher le formulaire d'édition.
 
 ---
 
@@ -134,7 +144,8 @@ Le type `EntityView` permet d'afficher le formulaire d'éditioni d'une entité.
 
 ### Architecture des dossiers
 
-Le fichier `sites.php` sera chargé de rediriger vers le bon dossier selon l'URL.
+Le fichier `sites.php` sera chargé de rediriger  
+vers le bon dossier selon l'URL.
 
 Chaque site aura son propre dossier, ce qui facilite la gestion des settings par serveur (dev / preprod / prod).
 
@@ -325,6 +336,10 @@ Désactiver un module
 drush pmu drupal/pathauto
 ```
 
++++
+
+## Drush : la boîte à outils
+
 Générer une archive de la base de données
 
 ```bash
@@ -347,7 +362,7 @@ drush upwd john --password="correcthorsebatterystaple"
 
 ## Les problèmes rencontrés
 
-- La documentation en ligne est difficile à prendre en main.  
+- La prise en main de la documentation de l'API.
 - Twig, un nouvel outil à prendre en main.  
 - Composer, un nouvel outil à prendre en main.  
 - Un peu plus de contraintes pour le code spécifique.  
