@@ -3,3 +3,9 @@
   background: none;
   box-shadow: none;
 }
+.reveal code {
+  color: #3c8e8e;
+}
+.reveal pre code {
+  color: #333333;
+}

@@ -1,382 +1,305 @@
 ---
 
-![Sass](assets/images/logo-drupal.png)
+![Composer](assets/images/logo-composer.png)
 
-### Harder, Better, Stronger
-
----
-
-## Du module au natif
-
-Plusieurs fonctionnalités désormais  
-intégrées dans le coeur :
-- i18n
-- Types de champs
-- Views
-- Services web
-- Entity Reference
+### Ça c'est vraiment Schubert !
 
 ---
 
-## Des fonctionnalités améliorées
+## À quoi ça sert ?
 
-Plus besoin de dupliquer les blocs,  
-ils sont à présent instantiables.
+Gérer les dépendances à des librairies PHP.
 
-Le système de cache a entièrement été revu  
-et est beaucou plus (trop ?) performant.
+Charger toutes les classes automatiquement.
 
-La gestion du multisites a été revue  
-pour simplifier le travail des développeurs.
+Maintenir les dépendances à jour.
+
+---
+
+## Exemple de projet Composer
+
+Un projet est définit par un fichier `composer.json` :
+
+```json
+{
+    "name": "schubert/symfony-11",
+    "description": "Symfony #11",
+    "type": "project",
+    "license": "GPLv3",
+    "authors": [{
+        "name": "Frantz Schubert",
+        "email": "bebert1797@hotmail.at"
+    }],
+    "require": {
+        "php": ">=5.6.0",
+        "diatem-net/jin": "~2.0"
+    }
+}
+```
+
++++
+
+## Le nom du projet
+
+Le nom d'un projet Composer  
+est toujours préfixé d'un namespace.  
+Ce namespace est l'identifiant  
+de l'utilisateur qui a créé le projet,  
+et généralement aussi son identifiant GitHub :
+
+`username/project`
+
+Ce système permet d'éviter les conflits entre projets.
+
++++
+
+## Le type de projet
+
+Les types de base sont `library`, `project`, `metapackage` et `composer-plugin`.
+
+Certains CMS, comme Drupal, définissent des types personnalisés, pour lesquels une procédure d'installation est prédéfinie.  
+Par exemple, les packages du type `drupal-module` seront installés dans le dossier `web/modules/contrib` plutôt que dans `vendor`.
+
++++
+
+## Les auteurs du projet
+
+Il est possible et fortement recommandé  
+de spécifier les auteurs du projet.  
+Pour chaque auteur, on peut définir  
+un certain nombre de données :
+
+```json
+{
+    "name": "Frantz Schubert Adermann",
+    "email": "bebert1791@hotmail.at",
+    "homepage": "https://schubert.at",
+    "role": "Composer"
+}
+```
+
++++
+
+## Les dépendances du projet
+
+La clé la plus importante du  
+fichier `composer.json` est la clé `require`.
+
+Elle définit les librairies PHP dont a besoin votre projet.
+
+Il est possible d'utiliser une seconde clé `require-dev`,  
+pour les librairies nécessaires aux tests par exemple.
 
 --- 
 
-## Un back-office plus user-friendly
+## Gérer votre projet avec Composer
 
-Quelques améliorations du back-office  
-pour faciliter l'administration :
-- CKeditor 4
-- Les onglets dans une colonne à droite
-- Prévisualisation du contenu
-- Quick Edit
-- Autocomplétion dans certains champs
+Avec un nouveau projet, il faut créer le fichier `composer.json`.
 
----
+Vous pouvez le faire à la main, ou directement avec la commande suivante :
 
-## Du tout neuf !
-
-Tout fichier de configuration peut désormais  
-être exporté et/ou importé.  
-Les mises en production sont ainsi  
-grandement facilitées.
-
-Drupal passe à Twig pour tous ses templates.
-
-Composer devient le gestionnaire de dépendances,  
-afin d'améliorer leur gestion et de suivre  
-l'harmonisation impulsée dans la communauté PHP.
-
----
-
-## POO FTW
-
-Pour plus de clareté, de robustesse et d'évolutivité, Drupal utilise enfin la POO :
-- Basé sur les composants Symfony2
-- Abandon de bon nombre de fonctions de thème
-- Le code doit être empaqueté dans un module
-- La surcharge devient possible à tout niveau
-- Respect des recommandations PSR
-
----
-
-### Des lacunes qui se comblent
-
-Drupal 8 n'a pas encore la même bibliothèque de modules que Drupal 7, mais les plus importants sont assez rapidement portés.
-
-Quelques exemples de modules en retard :
-- Panels (3.0-beta en Octobre 2016)
-- MediaEntity (1.6 en Novembre 2016)
-- Drupal Commerce (2.0-beta en Décembre 2016)
-- Webform (5.0-beta en Janvier 2017)
-
----
-
-### La base de données
-
-Très proche de ce qu'on avait déjà dans Drupal 7.  
-
-La table `node` a été scindée en deux pour l'i18n :
-
-![La base de données](assets/images/bdd-node.png)
-
----
-
-## Les modules
-
-Les modules sont classés dans 3 dossiers distincts :
-- `contrib` pour les modules téléchargés
-- `custom` pour les modules écrits
-- `patched` pour les modules modifiés
-
-Chaque module aura son dossier `src/`, qui sera automatiquement chargé via un autoloader.
+```bash
+composer init
+```
 
 +++
 
-## Exemple de module
+## Installer les dépendances
 
-![Exemple de module](assets/images/module-folder.png)
+L'initialisation de Composer ne crée  
+que le fichier `composer.json`.
 
-+++
+Pour installer les dépendances,  
+il faudra utiliser la commande install :
 
-### Les différents fichiers et dossiers
+```bash
+composer install --no-dev
+```
 
-- `config/install` : la procédure d'installation
-- `src/` : les classes
-- `translations/` : les traductions disponibles
-- `*.info` : définition du module
-- `*.links.task` : définition des menus
-- `*.module` : contient des hooks
-- `*.permissions` : définition des droits disponibles
-- `*.routing` : définition des routes 
-- `*.services` : définition des services publics 
+Par défaut, Composer installe les dépendances de  
+développement. Il faut donc préciser `--no-dev`  
+si vous n'en avez pas besoin.
 
 +++
 
-### Les différents tpes de routes
+## Ajouter une dépendance
 
-`Controller` pour appeler un contrôleur,  
-qui chargera généralement un template.
+L'ajout d'une nouvelle dépendance se fait via la commande require
 
-`Form` pour afficher un formulaire,  
-et de gérer sa validation et sa soumission.
+```bash
+composer require diatem-net/jin:^2.0
+```
 
-`EntityView` pour afficher le détail d'une entité.  
-`EntityView` pour afficher une liste d'entitée.  
-`EntityView` pour afficher le formulaire d'édition.
+Si aucune contrainte de version n'est spécifiée, Composer choisira la plus récente.  
+La librairie est immédiatement installée.
+
++++
+
+## Mettre à jour une dépendance
+
+La mise à jour se fait simplement  
+via la commande update.  
+Elle respectera la restriction de version  
+que vous avez définie.
+
+```bash
+composer update diatem-net/jin
+```
+
+Pour tout mettre à jour, lancer simplement :
+
+```bash
+composer update
+```
 
 ---
 
-## Le multisites
+## Autoload
 
-![Le multisites](assets/images/multisites.png)
-
-+++
-
-### Architecture des dossiers
-
-Le fichier `sites.php` sera chargé de rediriger  
-vers le bon dossier selon l'URL.
-
-Chaque site aura son propre dossier, ce qui facilite la gestion des settings par serveur (dev / preprod / prod).
-
-La seule contrainte apportée par ce système est que les fichiers ressources ne sont pas partagés. Il faudra copier le contenu du dossier `files/` si on veut transférer le contenu d'un site à un autre.
-
----
-
-### Drupal API : les entités
+Une fois vos dépendances installées, il ne vous reste plus qu'à charger les classes PHP dans votre projet. Composer s'occupe de tout et vous a déjà créé un fichier `autoload.php` !
 
 ```php
-$nodes = \Drupal::entityManager()
-    ->getStorage('node')
-    ->loadMultiple($nids);
-```
+require __DIR__ . '/vendor/autoload.php';
 
-```php
-use Drupal\node\Entity\Node;
-$node = Node::load($nid);
+use Jin2\Log\Debug;
+
+Debug::dump('Hello world !');
 ```
 
 +++
 
-### Drupal API : les SQL
+## Et pour vos classes ?
 
-```php
-$query = \Drupal::entityQuery('node');
-$query->condition('type', 'actualite')
-    ->condition('status', NODE_PUBLISHED)
-    ->sort('created', 'DESC')
-    ->range(0, 3);
-$nids = $query->execute();
+Composer vous donne la possibilité de charger votre propre code via son autoloader.
+
+Pour cela, précisez l'emplacement du code et son namespace dans le `composer.json` :
+
+```json
+{
+    "autoload": {
+        "psr-4": {
+            "Symfony10\\": "app/src/"
+        }
+    }
+}
 ```
 
-```php
-$query = \Drupal::database()->query('SELECT...');
-$results = $query->fetchAssoc();
-```
+--- 
+
+## Les versions
+
+Composer n'est pas un système de versioning de code, ce n'est donc pas lui qui va gérer les versions, mais votre VCS (Git, Mercurial).
+
+Tous les tags et toutes les branches que vous allez crééer seront accessibles via Composer :
+- `2.0` (tag `2.0`)
+- `dev-develop` (branche `develop`)
+- `v2.x-dev` (branche `v2`)
+
+**Important : Composer utilise des versions `x.y.z`**
+
++++ 
+
+## Les contraintes de versions
+
+Plus que des versions, vous allez surtout utiliser des contraintes de version pour définir ce dont a besoin votre projet :
+- `1.0.2` : version exacte
+- `>=1.0 <1.6` : plage de versions
+- `1.0 - 1.5` : identique à `>=1.0 <1.6`
+- `1.0.*` : identique à `>=1.0.0 <1.1.0`
+- `~1.0.2` : identique à `>=1.0.2 <1.1.0`
+- `^1.0.2` : identique à `>=1.0.2 <2.0.0`
+
++++ 
+
+## Zoom sur l'opérateur `~`
+
+L'opérateur `~` permet d'accepter toutes les versions jusqu'à la prochaine version non significative :
+- `~1.2` : identique à `>=1.2 <2.0.0`
+- `~1.2.3` : identique à `>=1.2.3 <1.3.0`
+- `~0.3` : identique à `>=0.3.0 <1.0.0`
 
 +++
 
-### Drupal API : i18n
+## Zoom sur l'opérateur `^`
 
-```php
-$langcode = \Drupal::languageManager()
-    ->getCurrentLanguage()
-    ->getName();
-$render = array(
-    'foo' => t('Lorem ipsum')
-);
-```
-
-```twig
-<p>{{ 'Lorem ipsum'|t }}</p>
-```
+L'opérateur `^` permet d'accepter toutes les versions jusqu'à la prochaine version majeure :
+- `^1.2` : identique à `>=1.2 <2.0.0`
+- `^1.2.3` : identique à `>=1.2.3 <2.0.0`
+- `^0.3` : identique à `>=0.3.0 <0.4.0`
 
 ---
 
-### Twig : les bases #1
+## Quelques commandes à connaître
 
-```twig
-{# variables #}
-<p>{{ foo }}</p>
-<p>{{ bar.key.subkey }}</p>
-<p>{{ bar|length }}</p>
+Pour installer une dépendance sans tenir compte des prérequis de plateforme :
 
-{# assignment #}
-{{ set i = 0 }}
+```bash
+composer require <library> --ignore-platform-reqs
+```
 
-{# for #}
-{% for key, val in qux %}
-    <p>{{ val }}</p>
-{% endfor %}
+Pour vider le cache de composer :
+
+```bash
+composer clear-cache
+```
+
+Pour ne pas (re)générer l'autoloader :
+
+```bash
+composer require <library> --no-autoloader
 ```
 
 +++
 
-### Twig : les bases #2
+## Quelques commandes à connaître
 
-```twig
-{# fonctions url/path #}
-<p>{{ url('route.name') }}</p>
-<p>{{ path('route.name') }}</p>
+Pour supprimer une dépendance :
 
-{# debug #}
-{{ dump(foo) }}
-{{ kint(foo) }}
+```bash
+composer remove <library>
+```
 
-{# if / date #}
-{% if date(bar) < date('-2days') %}
-    <p>{{ 'Too late'|t }}</p>
-{% endif %}
+Pour rechercher une dépendance :
+
+```bash
+composer search <library>
+```
+
+Pour afficher les dépendances :
+
+```bash
+composer show
 ```
 
 +++
 
-### Twig : les bases #1
+## Quelques commandes à connaître
 
-```twig
-{# defines block #}
-{% block sidebar %}
-<ul>
-    <li>Foo</li>
-    <li>Bar</li>
-    <li>Baz</li>
-</ul>
-{% endblock %}
-
-{# includes block #}
-{{ block('sidebar') }}
-```
-
-+++
-
-### Twig : les templates
-
-```twig
-{# includes template #}
-{% include '@module/template.html.twig' %}
-
-{# inherits template #}
-{% extends 'base.html.twig' %}
-
-{# overrides block #}
-{% block sidebar %}
-    <h3>Table Of Contents</h3>
-    {{ parent() }}
-{% endblock %}
-```
-
----
-
-### Composer : Drupal
-
-Installer un Drupal :
+Pour afficher les dépendances dépassées :
 
 ```bash
-composer create-project drupal-composer/drupal-project:8.x-dev some-dir --stability dev --no-interaction
+composer outdated
 ```
 
-Mettre à jour le coeur de Drupal :
+Pour vérifier votre fichier `composer.json` :
 
 ```bash
-composer update drupal/core --with-dependencies
+composer validate
 ```
 
-+++
-
-### Composer : modules
-
-Installer un module :
+Pour mettre Composer à jour :
 
 ```bash
-composer require drupal/pathauto
+composer self-update
 ```
-
-Activer un module :
-
-```bash
-cd web/
-drush en pathauto
-```
-
-Mettre à jour un module :
-
-```bash
-composer update drupal/pathauto
-```
-
----
-
-## Drush : la boîte à outils
-
-Vider le cache
-
-```bash
-drush cr
-```
-
-Activer un module
-
-```bash
-drush en drupal/pathauto
-```
-
-Désactiver un module
-
-```bash
-drush pmu drupal/pathauto
-```
-
-+++
-
-## Drush : la boîte à outils
-
-Générer une archive de la base de données
-
-```bash
-drush ard
-```
-
-Restaurer une archive de la base de données
-
-```bash
-drush arr dumps/mysave.sql
-```
-
-Réinitialiser le mot de passe d'un utilisateur
-
-```bash
-drush upwd john --password="correcthorsebatterystaple"
-```
-
----
-
-## Les problèmes rencontrés
-
-- La prise en main de la documentation de l'API.
-- Twig, un nouvel outil à prendre en main.  
-- Composer, un nouvel outil à prendre en main.  
-- Un peu plus de contraintes pour le code spécifique.  
-- Les dumps de variables causent souvent des OOM.
 
 ---
 
 ## Ressources utiles
 
-Documentation de l'API : <a href="https://api.drupal.org/api/drupal/8.4.x" target="_blank">api.drupal.org</a>
+Documentation : <a href="https://getcomposer.org/doc/" target="_blank">getcomposer.org/doc</a>
 
-Pour toute question : <a href="https://drupal.stackexchange.com/" target="_blank">drupal.stackexchange.com</a>
-
-Les commandes drush : <a href="https://drushcommands.com/" target="_blank">drushcommands.com</a>
+Dépôt principal de Composer : <a href="https://packagist.org/" target="_blank">packagist.org</a>
 
 ---
 
