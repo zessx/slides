@@ -1,0 +1,23 @@
+.reveal section img {
+  border: 0;
+  background: none;
+  box-shadow: none;
+}
+.reveal code {
+  color: #3c8e8e;
+}
+.reveal pre code {
+  color: #333333;
+}
+.reveal .lang-bash .hljs-comment {
+  float: right;
+}
+.reveal .ok {
+  color: #65cb49;
+}
+.reveal .notok {
+  color: #cc424f;
+}
+.reveal table {
+  font-size: 0.8em;
+}
