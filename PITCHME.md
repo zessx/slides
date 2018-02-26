@@ -1,360 +1,217 @@
 ---
 
-![Drupal](assets/images/logo-drupal.png)
+![Drupal](assets/images/logo-css3.png)
 
-### Cache Investigation
-
----
-
-## Les différents caches
-
-- Cache applicatif
-- Cache d'objets
-- Cache de rendu
-- Cache de TWIG
-- Cache HTTP
-
-+++
-
-### Le cache applicatif
-
-Il permet de mettre en cache des variables PHP :
-- pour une requête HTTP (cache d'exécution)
-- pour une durée plus longue (cache statique)
-
-Son utilisation doit être limitée à de l'optimisation de performances sur des portions de code lourdes, pour éviter de saturer la mémoire.
-
-+++
-
-### Le cache d'objets
-
-Transparent, il se charge de mettre en cache toutes les entités et les configurations. On est toujours dans la couche applicative, mais directement au niveau du framework.
-
-+++
-
-### Le cache de rendu
-
-Premier cache qui influe sur l'expérience utilisateur, c'est le plus important et le plus complexe à paramétrer. Son rôle est de définir le contexte, la durée de vie et les condition de regénération des templates. 
-
-+++
-
-### Le cache de TWIG
-
-Ce n'est proprement dit pas un cache lié à Drupal, mais il est bon de savoir que TWIG met les templates compilés en cache. Tant que le fichier source ne change pas, ce cache n'aura aucun impact sur l'utilisateur final.
-
-+++
-
-### Le cache HTTP
-
-Equivalent du cache de rendu, à un niveau plus élevé (par page). Drupal gère ce cache tout seul, en se basant sur toutes les méta-données du cache de rendu.
+### REM - Finding My Religion
 
 ---
 
-## La configuration par défault
+## Les différentes unités en CSS
 
-Drupal fournit une gestion de cache pré-configurée. Celle-ci se compose de deux modules (`Internal Page Cache` et `Dynamic Page Cache`), et d'un système de cache défini dans les fichiers de configuration.
+« CSS Values and Units Module Level 3 » *2013*
 
-+++
-
-### Internal Page Cache
-
-Ce module met des pages entières en cache pour les utilisateurs anonymes. Il est parfait pour des sites majoritairement statiques, sans gestion d'utilisateurs.
-
-La seule option de configuration de ce module est la durée de mise en cache.
+- Valeurs absolues : `px`, `pt`, `cm`, `mm`, `in`, `pc`
+- Valeurs relatives : `%`, `em`, `rem`, `vh`, `vw`, `vmin`, `vmax`, `ex`, `ch`
 
 +++
 
-### Dynamic Page Cache
+### L'unité `em`
 
-Ce module met des portions de pages (templates) en cache. Il demande plus de travail en amont, mais permet d'avoir une gestion de cache performante.
+*1eM correspondait à la taille du « M » majuscule.*
 
-Aucune configuration n'est requise, car le module se base directement sur les méta-données définies dans les Controllers.
+Taille relative à l'élément parent.
 
-+++
-
-### Le système de cache
-
-Par défaut, le cache est stocké en base de données (dans les tables `tb_cache_`), mais il est possible de changer le système dans le fichier `settings.php` (exemple ci-dessous avec Memcache) :
-
-```php
-$settings['cache']['default'] = 'cache.backend.memcache';
-```
-
-La clé `cache.backend.memcache` fait référence à un service Drupal, qui devra être défini en amont, probablement dans un module.
-
----
-
-## Désactiver le cache : la Factory
-
-Tout système de cache doit respecter l'interface `Drupal\Core\Cache\CacheFactoryInterface`.
-
-Comme on ne peut pas simplement supprimer le système de cache, on va utiliser la classe `Drupal\Core\Cache\NullBackendFactory`, qui propose un système de gestion de cache "vide", sans aucun traitement. 
-
-+++ 
-
-### Désactiver le cache : le service
-
-Le fichier `sites/develoment.services.yml` (pré-existant) définit un service pour utiliser cette Factory :
-
-```yml
-services:
-  cache.backend.null:
-    class: Drupal\Core\Cache\NullBackendFactory
-```
-
-Le nom du service sera `cache.backend.null`.
-
-+++
-
-### Désactiver le cache : utilisation du service
-
-On va charger le fichier YAML, dans le fichier `sites/default/settings.local.php`, pour pouvoir utiliser le service :
-
-```php
-$settings['container_yamls'][] = DRUPAL_ROOT . '/sites/development.services.yml';
-
-$settings['cache']['bins']['render'] = 'cache.backend.null';
-$settings['cache']['bins']['dynamic_page_cache'] = 'cache.backend.null';
-```
-
-Le fichier `sites/default/settings.local.php` sera ensuite chargé depuis `sites/default/settings.php`.
-
-+++
-
-### Désactiver le cache : TWIG
-
-En addition à tout cela, il faut penser à désactiver le cache de TWIG, dans `sites/development.services.yml` :
-
-```yml
-parameters:
-  twig.config:
-    debug: true
-    auto_reload: true
-    cache: false
+```css
+html       { font-size: 20px; }
+.module    { font-size: 16px; }
+.module h3 { font-size: 1.5em; /* = 24px */ }
 ```
 
 +++
 
-### Désactiver le cache : les préprocesseurs
+### L'unité `rem`
 
-Enfin, il ne reste plus qu'à désactiver les préprocesseurs JS et CSS, dans `sites/default/settings.local.php` :
+*Root em*, taille relative à l'élément racine (`<html>`).
 
-```php
-$config['system.performance']['css']['preprocess'] = FALSE;
-$config['system.performance']['js']['preprocess'] = FALSE;
+```css
+html       { font-size: 20px; }
+.module    { font-size: 16px; }
+.module h3 { font-size: 1.5rem; /* = 30px */ }
 ```
 
-Le fichier par défaut (`sites/example.settings.local.php`) contient quelques autres lignes intéressantes pour un environnement de développement.
++++
 
----
+### Les unités `vh`, `vw`, `vmin` et `vmax`
 
-## Les méta-données de cache
-
-Il existe 3 types de méta-données de cache :
-- les tags
-- les contextes
-- les dépendances temporelles
-
----
-
-## Les tags
-
-Ils permettent de définir une dépendence de votre template, à une entité ou une clé de configuration. Si l'entité change, tous les éléments de cache qui l'utilisent seront invalidés.
+- `vh` = hauteur de la fenêtre (IE9+)
+- `vw` = largeur de la fenêtre (IE9+)
+- `vmin` = `min(vh, vw)` (Edge 16+)
+- `vmax` = `max(vh, vw)` (IE9+)
 
 +++
 
-### Le fonctionnement des tags
+### L'unité `ex`
 
-![Drupal](assets/images/cache-tags.png)
+*X-height*, taille relative à la hauteur du « m » minuscule.   
+Compatible avec tous les navigateurs.    
+Intéressant pour les pictogrammes.
 
 +++
 
-### Un exemple d'utilisation des tags
+### L'unité `ch`
 
-```php
-public function myRenderFunction()
-{
-  return array(
-    '#theme' => 'my_template',
-    '#cache' => [
-      'tags' => ['node:3']
-    ]
-  );
+*Character*, taille relative à la largeur du « 0 ».   
+Mal supporté sur Internet Explorer (9~11).    
+Intéressant pour les fontes monospace.
+
+---
+
+## Intégration modulaire
+
+*Ne pas confondre avec les CSS Modules, un outils de namespacing principalement utilisé avec ReactJS.*
+
+- Faciliter la réutilisation de blocs
+- Avoir un design dynamique
+- Préserver l'équilibre en responsive
+
+---
+
+## Le problème du tout-pixel
+
+Reprenons l'exemple précédent, un peu développé :
+
+```scss
+html { 
+  font-size: 20px; 
+}
+.module { 
+  font-size: 16px; 
+  padding: 25px;
+  h3 {
+    font-size: 24px;
+    margin-bottom: 25px;
+  } 
 }
 ```
 
 +++
 
-### Les différents tags disponibles
+### Absolu = Indépendance
 
-- Les tags d'entité (`node:3`, `term:56`)
-- Les tags de configuration (`config:system.performance`)
-- Les tags personnalisés (`node_list`...)
+La modification d'un seul élément entraîne une perte d'équilibre sur l'ensemble.   
+Il faut donc tout modifier à chaque fois :
 
-+++
-
-### Invalider un tag personnalisé
-
-```php
-use Drupal\Core\Cache\Cache;
-
-Cache::invalidateTags(array('my_custom_tag'));
-```
-
----
-
-## Les contextes 
-
-Ils permettent de définir une dépendence de votre template, à un contexte particulier. Un même template aura donc un élément de cache par contexte.
-
-+++
-
-### Le fonctionnement des contextes
-
-![Drupal](assets/images/cache-contexts.png)
-
-+++
-
-### Un exemple d'utilisation des contextes
-
-```php
-public function myRenderFunction()
-{
-  return array(
-    '#theme' => 'my_template',
-    '#cache' => [
-      'contexts' => ['url', 'user.permissions']
-    ]
-  );
-}
-```
-
-+++
-
-### Les différents contextes disponibles
-
-- Les cookies (`cookies:cookiesplease_status`)
-- Les headers (`header:headers:User-Agent`)
-- La langue (`language:fr`)
-- L'url (`url.query_args`, '`url.path.is_front`)
-- L'utilisateur (`user.is_super_user`, `user.roles`, `user.permissions`)
-- La route (`route.name`, `route.menu_active_trails`)
-- ... (`session.exists`, `theme`, `timezone`, `ip`)
-
----
-
-## Les dépendances temporelles 
-
-Comme dans tout système de cache, il est possible de définir une durée maximale de rétention pour tout élément de cache.
-
-+++
-
-### La clé `max-age`
-
-```php
-use Drupal\Core\Cache\Cache;
-
-public function myRenderFunction()
-{
-  return array(
-    '#theme' => 'my_template',
-    '#cache' => [
-      'max-age'  => Cache::PERMANENT,
-      'tags'     => ['node_list'],
-      'contexts' => ['url.query_args:q', 'user:roles']
-    ]
-  );
+```scss
+@media screen and(max-width: 320px) {
+  .module { 
+    font-size: 10px; 
+    padding: 15px;
+    h3 {
+      font-size: 15px;
+      margin-bottom: 15px;
+    } 
+  }
 }
 ```
 
 ---
 
-## Fusion de configurations
+## Du relatif avec `em`
 
-Il est possible de fusionner des configuration (tags, contextes et dépendances temporelles) à l'aide des fonctions suivantes :
+`em` doit ête utilisé pour tout élément dont la taille est étroitement liée à son parent :
 
-```php
-$render['#cache']['contexts'] = Cache::mergeContexts(
-    $render['#cache']['contexts'], 
-    $node->getCacheContexts()
-);
-/* Aussi disponibles :
- * Cache::mergeTags()
- * Cache::mergeMaxAges()
- */
-```
-
----
-
-## Les JsonResponse
-
-L'objet `JsonResponse` permet de renvoyer du JSON. Voici un exemple d'utilsation basique :
-
-```php
-public function getJson(Request $request) 
-{
-  $data = [...];
-  return new JsonResponse($data);
-}
-```
-
-Les données renvoyées ne sont pas mises en cache.
+- les paddings
+- les margins (selon les cas)
 
 +++
 
-### Les CacheableJsonResponse
+### Relatif = Dépendance 
 
-L'objet `CacheableJsonResponse` permet d'ajouter une clé `#cache` dans votre réponse, afin de gérer le cache sur vos APIs de ma même manière que sur vos templates :
+Si la font-size change, les éléments restent équilibrés :
 
-```php
-public function getJson(Request $request) 
-{
-  $data = [
-    ...
-    '#cache' => ['max-age' => 3600]
-  ];
-  $response = new CacheableJsonResponse($data);
-  $response->addCacheableDependency(CacheableMetadata::createFromRenderArray($data));
-  return $response;
+```scss
+.module { 
+  font-size: 16px; 
+  padding: 1.5em; /* = 24px */
+}
+@media screen and(max-width: 320px) {
+  .module { 
+    font-size: 10px; 
+    /* padding = 15px */
+  }
 }
 ```
 
 ---
 
-## Mettre des objets en cache
+## Penser "modulaire" avec `rem` 
 
-Il est possible de mettre ce que l'on veut en cache. C'est particulièrement utile pour les résultats d'opérations nécessitant un temps de traitement important.
+`rem` doit être utiliser pour tout module (= bloc visuel) pouvant être réutilisé, ainsi :
 
-```php
-$cid = 'my_module:my_cache_key';
-
-$data = NULL;
-if ($cache = \Drupal::cache()->get($cid)) {
-  $data = $cache->data;
-} else {
-  $data = my_module_long_calculation();
-  \Drupal::cache()->set($cid, $data);
-}
-```
+- le module ne dépend pas de son parent direct
+- on change la taille d'un module en une ligne
 
 +++
 
-### Taguer ses objets
+### Modularité = Réutilisabilité
 
-Tout comme avec la gestion du cache de rendu TWIG, il est possible de définir une durée maximale de stockage, ainsi que des tags :
+Chaque module est indépendant, et réutilisable :
 
-```php
-$tags = array('my_custom_tag', 'node:13');
-\Drupal::cache()->set($cid, $data, Cache::CACHE_PERMANENT, $tags);
+```scss
+.module { 
+  font-size: 1rem; /* = 16px */ 
+  padding: 1.5em; 
+  h3 {
+    font-size: 1.8em;
+    margin-bottom: 1em; 
+  } 
+  aside & {
+    font-size: 0.8rem;  /* = 12.8px */ 
+  }
+}
+@media screen and(max-width: 320px) {
+  html {
+    font-size: 14px;
+  }
+}
 ```
+
+---
+
+## Utiliser `%` pour l'élément racine
+
+Afin que la feuille de style prenne les paramètre utilisateurs en compte :
+
+```scss
+html { 
+  font-size: 100%; /* 16px par défaut */ 
+}
+.module { 
+  font-size: 1rem; 
+  /* ... */
+}
+@media screen and(max-width: 320px) {
+  html {
+    font-size: 87.5%; /* 14px par défaut */
+  }
+}
+```
+
+---
+
+## Récapitulatif 
+
+- Racine de la page : `%`
+- Racine d'un module : `rem`
+- Intérieur d'un module : `em`
+
+Les `px` doivent être limités aux cas particuliers, aux images et éventuellement à la structure de la page.
 
 ---
 
 ## Ressources utiles
 
-Documentation de l'API Cache : <a href="https://www.drupal.org/docs/8/api/cache-api" target="_blank">drupal.org</a>
-
-Pour toute question : <a href="https://drupal.stackexchange.com/" target="_blank">drupal.stackexchange.com</a>
+Specification W3C : <a href="https://www.w3.org/TR/2013/CR-css3-values-20130730/" target="_blank">w3.org</a>
 
 ---
 
