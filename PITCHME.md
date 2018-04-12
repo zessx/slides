@@ -118,10 +118,11 @@ Il faut donc tout modifier à chaque fois :
 
 ## Du relatif avec `em`
 
-`em` doit ête utilisé pour tout élément dont la taille est étroitement liée à son parent :
+`em` doit être utilisé pour tout élément dont la taille est étroitement liée à son parent :
 
 - les paddings
 - les margins (selon les cas)
+- les sous-titres...
 
 +++
 
